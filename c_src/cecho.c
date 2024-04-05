@@ -267,7 +267,7 @@ void do_addstr(state *st) {
       encode_ok_reply(st, ENOMEM);
       return;
   }
-  ei_decode_string(st->args, &(st->index), str);
+  ei_decode_binary(st->args, &(st->index), str, &strlen);
   code = addnstr(str, strlen);
   free(str);
   encode_ok_reply(st, code);
@@ -393,7 +393,7 @@ void do_mvaddstr(state *st) {
       encode_ok_reply(st, ENOMEM);
       return;
   }
-  ei_decode_string(st->args, &(st->index), str);
+  ei_decode_binary(st->args, &(st->index), str, &strlen);
   code = mvaddnstr((int)y, (int)x, str, (int)strlen);
   free(str);
   encode_ok_reply(st, code);
@@ -452,7 +452,7 @@ void do_waddstr(state *st) {
       encode_ok_reply(st, ENOMEM);
       return;
   }
-  ei_decode_string(st->args, &(st->index), str);
+  ei_decode_binary(st->args, &(st->index), str, &strlen);
   code = waddnstr(st->win[slot], str, strlen);
   free(str);
   encode_ok_reply(st, code);
@@ -482,7 +482,7 @@ void do_mvwaddstr(state *st) {
       encode_ok_reply(st, ENOMEM);
       return;
   }
-  ei_decode_string(st->args, &(st->index), str);
+  ei_decode_binary(st->args, &(st->index), str, &strlen);
   code = mvwaddnstr(st->win[slot], (int)y, (int)x, str, strlen);
   free(str);
   encode_ok_reply(st, code);

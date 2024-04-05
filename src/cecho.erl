@@ -67,9 +67,9 @@ noecho() ->
 addch(Char) when is_integer(Char) ->
     call(?ADDCH, Char).
 
-addstr(String) when is_list(String) ->
-    Str = lists:flatten(String),
-    call(?ADDSTR, {erlang:iolist_size(Str), Str}).
+addstr(String) ->
+    Str = iolist_to_binary(String),
+    call(?ADDSTR, {byte_size(Str), Str}).
 
 move(Y, X) when is_integer(X) andalso is_integer(Y) ->
     call(?MOVE, {Y, X}).
@@ -130,10 +130,9 @@ mvaddch(Y, X, Char) when is_integer(Char) andalso is_integer(X)
 			 andalso is_integer(Y) ->
     call(?MVADDCH, {Y, X, Char}).
 
-mvaddstr(Y, X, String) when is_list(String) andalso is_integer(X) andalso 
-			    is_integer(Y) ->
-    Str = lists:flatten(String),
-    call(?MVADDSTR, {Y, X, erlang:iolist_size(Str), Str}).
+mvaddstr(Y, X, String) when is_integer(X) andalso is_integer(Y) ->
+    Str = iolist_to_binary(String),
+    call(?MVADDSTR, {Y, X, byte_size(Str), Str}).
 
 newwin(Height, Width, StartY, StartX) when is_integer(Height) andalso 
 					   is_integer(Width) andalso 
@@ -148,18 +147,17 @@ wmove(Window, Y, X) when is_integer(Window) andalso is_integer(Y) andalso
 			 is_integer(X) ->
     call(?WMOVE, {Window, Y, X}).
 
-waddstr(Window, String) when is_integer(Window) andalso is_list(String) ->
-    Str = lists:flatten(String),
-    call(?WADDSTR, {Window, erlang:iolist_size(Str), Str}).
+waddstr(Window, String) when is_integer(Window) ->
+    Str = iolist_to_binary(String),
+    call(?WADDSTR, {Window, byte_size(Str), Str}).
 
 waddch(Window, Char) when is_integer(Window) andalso is_integer(Char) ->
     call(?WADDCH, {Window, Char}).
 
 mvwaddstr(Window, Y, X, String) when is_integer(Window) andalso is_integer(Y)
-				     andalso is_integer(X) andalso 
-				     is_list(String) ->
-    Str = lists:flatten(String),
-    call(?MVWADDSTR, {Window, Y, X, erlang:iolist_size(Str), Str}).
+				     andalso is_integer(X) ->
+    Str = iolist_to_binary(String),
+    call(?MVWADDSTR, {Window, Y, X, byte_size(Str), Str}).
 
 mvwaddch(Window, Y, X, Char) when is_integer(Window) andalso is_integer(Y)
                                   andalso is_integer(X) ->
