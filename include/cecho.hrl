@@ -99,4 +99,4 @@
 -define(ceKEY_PGUP, 339).
 -define(ceKEY_END, 360).
 
-
+-define(ceKEY_RESIZE, 410).
