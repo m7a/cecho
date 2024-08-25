@@ -27,6 +27,7 @@
 // Includes
 #include <stdlib.h>
 #include <string.h>
+#include <sys/ioctl.h>
 #include "cecho.h"
 #include "cecho_commands.h"
 #include "erl_driver.h"
@@ -296,7 +297,18 @@ void do_getmaxyx(state *st) {
   long slot;
   int x, y;
   ei_decode_long(st->args, &(st->index), &slot);
-  getmaxyx(st->win[slot], y, x);
+  if (slot == 0) {
+    struct winsize w;
+    int rc = ioctl(0, TIOCGWINSZ, &w);
+    if (rc == 0) {
+      y = w.ws_row;
+      x = w.ws_col;
+    } else {
+      getmaxyx(st->win[slot], y, x);
+    }
+  } else {
+    getmaxyx(st->win[slot], y, x);
+  }
   tuple(&(st->eixb), 2);
   integer(&(st->eixb), y);
   integer(&(st->eixb), x);
